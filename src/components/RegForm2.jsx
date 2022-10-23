@@ -7,13 +7,13 @@ import "../styles.css";
 import { useNavigate } from "react-router-dom";
 
 
-const Form2 = () => {
+const RegForm2 = () => {
     const [i1,setI1] = useState();
     const [i2,setI2] = useState();
     const [i3,setI3] = useState();
     const [i4,setI4] = useState();
     const navigate = useNavigate();
-    
+
     //to get cordinates
     function getTransform(el) {
         var results = $(el).css('transform').match(/matrix(?:(3d)\(\d+(?:, \d+)*(?:, (\d+))(?:, (\d+))(?:, (\d+)), \d+\)|\(\d+(?:, \d+)*(?:, (\d+))(?:, (\d+))\))/)
@@ -92,13 +92,8 @@ const Form2 = () => {
     const onSubmit = async () => {
         var num = val[3]+val[2]+val[1]+val[0];
         var res = await sha256(num);
-        var pass = localStorage.getItem('pass2');
-        if(res!=pass){
-            alert("Password incorrect");
-        }
-        else{
-            navigate("/success");
-        }
+        localStorage.setItem('pass2',res);
+        navigate('/success');
     }
     
 
@@ -185,4 +180,4 @@ const Form2 = () => {
     );
 };
 
-export default Form2;
+export default RegForm2;

@@ -3,7 +3,7 @@ import Form from "./Form";
 
 const Log = () => {
   return (
-    <div className="d-flex flex-row mh-100">
+    <div className="d-flex flex-column justify-content-center" style={{height: "100vh", width: "100vw" }}>
       <Form />
     </div>
   );

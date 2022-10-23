@@ -2,9 +2,7 @@ import React, { useState, useEffect,useRef} from "react";
 import {useSpring, animated} from "react-spring";
 import { useDrag } from "react-use-gesture";
 import $ from 'jquery';
-import {sha256} from 'crypto-hash';
 import "../styles.css";
-import { useNavigate } from "react-router-dom";
 
 
 const Form2 = () => {
@@ -12,44 +10,10 @@ const Form2 = () => {
     const [i2,setI2] = useState();
     const [i3,setI3] = useState();
     const [i4,setI4] = useState();
-    const navigate = useNavigate();
-    
-    //to get cordinates
-    function getTransform(el) {
-        var results = $(el).css('transform').match(/matrix(?:(3d)\(\d+(?:, \d+)*(?:, (\d+))(?:, (\d+))(?:, (\d+)), \d+\)|\(\d+(?:, \d+)*(?:, (\d+))(?:, (\d+))\))/)
-        
-        if(!results) return [0, 0, 0];
-        if(results[1] == '3d') return results.slice(2,5);
-    
-        results.push(0);
-        return results.slice(5, 8);
-    }
-
-    //to check div number
-    function checkDiv(x,y){
-        if(x>=0&&x<=165){
-            if(y>=0&&y<=95) return '1';
-            if(y>=200&&y<=295) return '4';
-            if(y>=400&&y<=495) return '7';
-        }
-
-        if(x>=370&&x<=543){
-            if(y>=0&&y<=95) return '2';
-            if(y>=200&&y<=295) return '5';
-            if(y>=400&&y<=495) return '8';
-        }
-
-        if(x>=748&&x<=923){
-            if(y>=0&&y<=95) return '3';
-            if(y>=200&&y<=295) return '6';
-            if(y>=400&&y<=495) return '9';
-        }
-
-        return 0;
-    }
+    const useRefI1 = useRef();
 
     //value 
-    const val = ['1','1','1','1'];
+    const val = ['0','0','0','0'];
 
     //drag n drop
     const posI1 = useSpring({x:0, y:0});
@@ -60,46 +24,39 @@ const Form2 = () => {
     const bindPosI1 = useDrag((params)=>{
         posI1.x.set(params.offset[0]);
         posI1.y.set(params.offset[1]);
-        let cord = getTransform("#iD1");
-        val[0] = checkDiv(cord[0],cord[1]);
+        // console.log(posI1.x);
+        console.log($("#i1").display.style);
+        if ($("#D1").has("img")) {
+            console.log("Present in 1");
+        }
+
+        
+        if ($("#D2").has("img")) {
+            console.log("Present in 1");
+        }
+
     });
 
     
     const bindPosI2 = useDrag((params)=>{
         posI2.x.set(params.offset[0]);
         posI2.y.set(params.offset[1]);
-        let cord = getTransform("#iD2");
-        val[1] = checkDiv(cord[0],cord[1]);
+        console.log(posI2);
     });
 
     
     const bindPosI3 = useDrag((params)=>{
         posI3.x.set(params.offset[0]);
         posI3.y.set(params.offset[1]);
-        let cord = getTransform("#iD3");
-        val[2] = checkDiv(cord[0],cord[1]);
+        console.log(posI3);
     });
 
     
     const bindPosI4 = useDrag((params)=>{
         posI4.x.set(params.offset[0]);
         posI4.y.set(params.offset[1]);
-        let cord = getTransform("#iD4");
-        val[3] = checkDiv(cord[0],cord[1]);
+        console.log(posI4);
     });
-
-    //form submission
-    const onSubmit = async () => {
-        var num = val[3]+val[2]+val[1]+val[0];
-        var res = await sha256(num);
-        var pass = localStorage.getItem('pass2');
-        if(res!=pass){
-            alert("Password incorrect");
-        }
-        else{
-            navigate("/success");
-        }
-    }
     
 
     //setting image url
@@ -120,32 +77,19 @@ const Form2 = () => {
             <div>
             <div className="container" style={{textAlign:'center'}}>
                 <div className="row">
-                    <div className="col-4 border border-2">
-                        <animated.div {...bindPosI1()}  className="parent" id="iD1"  style={{position:'absolute', x:posI1.x, y:posI1.y, touchAction:'none'}}>
+                    <div className="col-4 border border-2" id="D1">
+                        <animated.div {...bindPosI1()}  className="parent"   style={{x:posI1.x, y:posI1.y, touchAction:'none'}}>
                         <img src={i1} alt="I1" id="i1" />
                         </animated.div>
-                        
-                     <animated.div {...bindPosI2()}   className="parent" id="iD2" style={{position:'absolute',x:posI2.x, y:posI2.y, touchAction:'none'}}>
-                            <img src={i2} alt="I2" id="i2"/>
-                        </animated.div>
-
-                        
-                     <animated.div {...bindPosI3()} className="parent"  id="iD3" style={{position:'absolute',x:posI3.x, y:posI3.y, touchAction:'none'}}>
-                            <img src={i3} alt="I3" id="i3"/>
-                        </animated.div>
-
-                        
-                     <animated.div {...bindPosI4()}    className="parent"  id="iD4"  style={{position:'absolute',x:posI4.x, y:posI4.y, touchAction:'none'}}>
-                            <img src={i4} alt="I4" id="i4"/>
-                        </animated.div>
-
-
                     </div>
                      <div className="col-4 border border-2" id="D2">
                       
                     </div>
                      <div className="col-4 border border-2">
                      
+                     <animated.div {...bindPosI2()}   className="parent"  style={{x:posI2.x, y:posI2.y, touchAction:'none'}}>
+                            <img src={i2} alt="I2" id="i2"/>
+                        </animated.div>
                     </div>
                 </div>
 
@@ -153,12 +97,18 @@ const Form2 = () => {
                 <div className="row">
                      <div className="col-4 border border-2">
                      
+                     <animated.div {...bindPosI3()} className="parent"   style={{x:posI3.x, y:posI3.y, touchAction:'none'}}>
+                            <img src={i3} alt="I3" id="i3"/>
+                        </animated.div>
                     </div>
                      <div className="col-4 border border-2">
                      
                     </div>
                      <div className="col-4 border border-2">
                      
+                     <animated.div {...bindPosI4()}    className="parent"    style={{x:posI4.x, y:posI4.y, touchAction:'none'}}>
+                            <img src={i4} alt="I4" id="i4"/>
+                        </animated.div>
                     </div>
                 </div>
 
@@ -178,7 +128,7 @@ const Form2 = () => {
             </div>
 
             <div style={{textAlign:'center', margin:'10px'}}>
-            <button type="submit" class="btn btn-primary" onClick={() => onSubmit()}>Submit</button>
+            <button type="button" class="btn btn-primary">Submit</button>
             </div>
             </div>
         </>
